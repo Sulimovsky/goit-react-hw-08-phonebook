@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectIsLoading } from 'redux/auth/selectors';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useAuth } from 'components/hooks/useAuth';
 import { register } from 'redux/auth/operations';
-import { validationRegisterFormPassword } from 'components/validationForms/validationForms';
+import { validationFormPassword } from 'components/validationForms/validationForms';
 import { Box, TextField, Stack } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -10,11 +11,11 @@ import { Section } from './RegisterPage.styled';
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
+  const { isLoading } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const validationPassword = validationRegisterFormPassword(password);
+  const validationPassword = validationFormPassword(password);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -23,7 +24,16 @@ const RegisterPage = () => {
       email,
       password,
     };
-    dispatch(register(data));
+    dispatch(register(data))
+      .unwrap()
+      .then(res => {
+        toast.success(`Welcome, ${res.user.name}!`);
+      })
+      .catch(() => {
+        toast.error(
+          'The user with this email is already registered, try another email.'
+        );
+      });
     reset();
   };
 

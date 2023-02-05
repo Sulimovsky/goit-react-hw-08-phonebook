@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { deleteContact } from 'redux/contacts/operations';
 import {
   List,
@@ -17,7 +18,11 @@ import { LinkNumber } from './ContactList.styled';
 const ContactList = ({ contacts }) => {
   const dispatch = useDispatch();
 
-  const handleDelete = id => dispatch(deleteContact(id));
+  const handleDelete = id =>
+    dispatch(deleteContact(id))
+      .unwrap()
+      .then(res => res)
+      .catch(() => toast.error("Error! Contact wasn't delete."));
 
   return (
     <>

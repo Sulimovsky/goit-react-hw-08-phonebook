@@ -8,10 +8,9 @@ import {
 import { Box, TextField, Stack } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import { toast } from 'react-toastify';
 
 const ContactForm = ({ onAddContact }) => {
-  const { isLoadingBtn, error } = useContacts();
+  const { isLoadingBtn } = useContacts();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const validationName = validationContactsFormName(name);
@@ -83,7 +82,6 @@ const ContactForm = ({ onAddContact }) => {
           </LoadingButton>
         </Stack>
       </Box>
-      {error && toast.warn('Something went wrong...')}
     </>
   );
 };

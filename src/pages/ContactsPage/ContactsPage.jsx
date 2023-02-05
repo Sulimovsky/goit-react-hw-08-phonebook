@@ -15,11 +15,14 @@ import { Section, Title, PlaceholderEmptyList } from './ContactsPage.styled';
 
 const ContactsPage = () => {
   const dispatch = useDispatch();
-  const { contacts, isLoading, error } = useContacts();
+  const { contacts, isLoading } = useContacts();
   const filteredValue = useSelector(selectFilter);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(fetchContacts())
+      .unwrap()
+      .then(res => res)
+      .catch(() => toast.error("Error! Can't download contacts"));
   }, [dispatch]);
 
   const handleAddContact = newContact => {
@@ -32,18 +35,19 @@ const ContactsPage = () => {
       return;
     }
 
-    dispatch(addContact(newContact));
+    dispatch(addContact(newContact))
+      .unwrap()
+      .then(res => res)
+      .catch(() => toast.error("Error! Can't add contacts"));
   };
 
   const handleFilter = value => {
     dispatch(filter(value));
   };
 
-  const filteredContacts = contacts
-    ? contacts.filter(({ name }) =>
-        name.toLowerCase().includes(filteredValue.toLowerCase())
-      )
-    : [];
+  const filteredContacts = contacts.filter(({ name }) =>
+    name.toLowerCase().includes(filteredValue.toLowerCase())
+  );
 
   return (
     <main>
@@ -53,7 +57,7 @@ const ContactsPage = () => {
         <Title>My Contacts</Title>
         <Filter onFilter={handleFilter} />
         {isLoading && <BasicLoader />}
-        {contacts && contacts.length > 0 ? (
+        {contacts.length > 0 ? (
           <ContactList contacts={filteredContacts} />
         ) : (
           <PlaceholderEmptyList>
@@ -61,7 +65,6 @@ const ContactsPage = () => {
             <PermContactCalendarIcon sx={{ ml: 1 }} />
           </PlaceholderEmptyList>
         )}
-        {error && toast.error('Something went wrong...')}
       </Section>
     </main>
   );

@@ -19,6 +19,7 @@ export const handleFulfilled = state => {
 };
 
 export const handleRejected = (state, action) => {
+  state.isLoadingBtn = false;
   state.isLoading = false;
   state.error = action.payload;
 };

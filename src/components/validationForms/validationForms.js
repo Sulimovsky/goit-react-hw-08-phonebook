@@ -1,4 +1,4 @@
-export const validationRegisterFormPassword = value => {
+export const validationFormPassword = value => {
   if (value === '') return false;
 
   return value.length < 7;

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { logOut } from 'redux/auth/operations';
 import { IconButton, MenuItem, Menu } from '@mui/material';
@@ -10,7 +11,11 @@ const UserMenu = ({ onMenuUser, anchorElUser, onClose }) => {
   const dispatch = useDispatch();
   const { user } = useAuth();
 
-  const handleLogOut = () => dispatch(logOut());
+  const handleLogOut = () =>
+    dispatch(logOut())
+      .unwrap()
+      .then(res => res)
+      .catch(() => toast.error('Something went wrong.'));
 
   return (
     <div>

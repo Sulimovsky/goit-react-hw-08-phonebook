@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { login } from 'redux/auth/operations';
 import { useAuth } from 'components/hooks/useAuth';
+import { validationFormPassword } from 'components/validationForms/validationForms';
 import { Box, TextField, Stack } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -12,6 +14,7 @@ const LogInPage = () => {
   const { isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const validationPassword = validationFormPassword(password);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -19,7 +22,14 @@ const LogInPage = () => {
       email,
       password,
     };
-    dispatch(login(data));
+    dispatch(login(data))
+      .unwrap()
+      .then(res => {
+        toast.success(`Welcome, ${res.user.name}!`);
+      })
+      .catch(() => {
+        toast.error('There is no such user.');
+      });
     reset();
   };
 
@@ -44,6 +54,11 @@ const LogInPage = () => {
               sx={{ width: '100%' }}
             />
             <TextField
+              error={validationPassword}
+              helperText={
+                validationPassword &&
+                'Enter a password longer than 7 characters'
+              }
               id="outlined-basic"
               label="Password"
               variant="outlined"

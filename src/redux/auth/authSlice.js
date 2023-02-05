@@ -9,8 +9,6 @@ const initialState = {
   isLoggedIn: false,
   isRefreshing: false,
   isLoading: false,
-  isLoadingBtn: false,
-  error: false,
 };
 
 const authSlice = createSlice({
@@ -29,7 +27,6 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
       })
       .addCase(login.pending, state => {
         state.isLoading = true;
@@ -42,7 +39,6 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
       })
       .addCase(logOut.pending, state => {
         state.isLoading = true;
@@ -55,7 +51,6 @@ const authSlice = createSlice({
       })
       .addCase(logOut.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
       })
       .addCase(refreshUser.pending, state => {
         state.isRefreshing = true;
